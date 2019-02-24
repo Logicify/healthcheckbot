@@ -1,0 +1,11 @@
+{
+    "author": "Dmitry Berezovsky",
+    "back": false,
+    "exclude": "",
+    "include": "*.py",
+    "license": "gpl3",
+    "program": "HealthcheckBot",
+    "short": "Healthcheck Bot",
+    "single": true,
+    "year": "2018"
+}

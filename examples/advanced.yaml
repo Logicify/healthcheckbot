@@ -1,0 +1,36 @@
+---
+app:
+  id: mybot-1
+  classpath:
+    - /tmp
+
+outputs:
+  console:
+    provider: healthcheckbot.outputs.ConsoleOutput
+  logger:
+    provider: healthcheckbot.outputs.LoggerOutput
+    logger_name: OUT
+    log_level: INFO
+
+triggers:
+  each_1_minute:
+    provider: healthcheckbot.triggers.SimpleTimer
+    interval: 60
+
+watchers:
+  system_time:
+    provider: healthcheckbot.watchers.SystemTimeWatcher
+    triggers:
+      - each_1_minute
+
+  google_home:
+    provider: healthcheckbot.watchers.HttpRequest
+    url: http://google.com
+    assert_response_time: 2
+    assert_status: 200
+    triggers:
+      - each_1_minute
+    custom_assertions:
+      check_title:
+        provider: healthcheckbot.assertions.TitleAssert
+        expected_title: 'Google'
