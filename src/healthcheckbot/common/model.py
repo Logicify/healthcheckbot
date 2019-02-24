@@ -157,12 +157,16 @@ class WatcherResult:
         self.assertions_failed = assertions_failed
         self.state = state or {}
 
-    def to_dict(self):
+    def to_dict(self) -> typing.Dict:
         return {
-            'assertions_failed': [x._asdict() for x in self.assertions_failed],
-            'checks_passed': self.assertions_failed is None or len(self.assertions_failed) == 0,
+            'failed_assertions': [x._asdict() for x in self.assertions_failed],
+            'checks_passed': self.checks_passed,
             'state': self.state,
         }
+
+    @property
+    def checks_passed(self):
+        return self.assertions_failed is None or len(self.assertions_failed) == 0
 
 
 class ValidationReporter:

@@ -32,3 +32,16 @@ def number(value):
 
 def string(value):
     return isinstance(value, str)
+
+
+def dictionary(value):
+    return isinstance(value, dict)
+
+
+def dict_of_strings(value):
+    if not dictionary(value):
+        return False
+    for v in value.values():
+        if not isinstance(v, str):
+            return False
+    return True

@@ -2,7 +2,7 @@
 
 Healthcheck Bot is a standalone highly configurable and extendable application for verifying application status.
 User is free to configure targets to be tested as well as the way output needs to be delivered. Application also supports custom
-assertions written in Python for the cases when healthcheck is more complicated.
+assertions written in Python for the cases when check scenario is more complicated.
 
 ## Usage
 
@@ -116,7 +116,7 @@ TBD
 
 ## Customization
 
-The ability to extend behavior of any module is a key feature of HealthcheckBot. In order to make it easier load modules from the outside user could extend classpath (folders to be scanned for classes) with the simple configuration option. Consider the following example:
+An ability to extend behavior of any module is a key feature of HealthcheckBot. In order to make it easier load modules from the outside user could extend classpath (folders to be scanned for classes) with the simple configuration option. Consider the following example:
 
 ```yaml
 app:  

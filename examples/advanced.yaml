@@ -7,10 +7,12 @@ app:
 outputs:
   console:
     provider: healthcheckbot.outputs.ConsoleOutput
-  logger:
-    provider: healthcheckbot.outputs.LoggerOutput
-    logger_name: OUT
-    log_level: INFO
+  gelf:
+    provider: healthcheckbot.outputs.GelfOutput
+    gelf_host: localhost
+    gelf_port: 12201
+    gelf_protocol: udp
+    include_state: False
 
 triggers:
   each_1_minute:
