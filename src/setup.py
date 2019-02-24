@@ -68,7 +68,7 @@ setup(
     # py_modules=["app", 'cli', 'daemonize'],
 
     install_requires=[
-        'PyYAML==3.13',
+        'PyYAML==4.2b1',
         'typing>=3.6',
         'requests==2.21.0',
         'beautifulsoup4==4.4.0',
