@@ -15,7 +15,11 @@ function print_help() {
     echo ""
 }
 
-source "${VIRTUAL_ENV_PATH}/bin/activate"
+if [[ ! -v SKIP_VENV ]]; then
+    print "Virtual environment is disabled. Continue with system global context."
+else
+    source "${VIRTUAL_ENV_PATH}/bin/activate"
+fi
 
 if [[ $# -eq 0 ]]; then
     print_help

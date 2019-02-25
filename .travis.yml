@@ -11,6 +11,8 @@ virtualenv:
   system_site_packages: true
 script: ./build.sh build
 install: python setup.py install
+env:
+  - SKIP_VENV=yes
 deploy:
   provider: pypi
   user: logicify
