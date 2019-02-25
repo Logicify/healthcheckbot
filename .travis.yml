@@ -7,8 +7,10 @@ os:
 cache:
   directories:
     - "$HOME/.cache"
-script: ./build.sh build
-install: python setup.py install
+script:
+  - ./build.sh build
+install:
+  - pip install -r requirements.txt
 env:
   - SKIP_VENV=yes
 deploy:
