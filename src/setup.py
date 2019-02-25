@@ -72,7 +72,7 @@ setup(
         'typing>=3.6',
         'requests==2.21.0',
         'beautifulsoup4==4.4.0',
-        'graypy==0.3.2'
+        'graypy==0.3.2',
         'daemons==1.3.0',
 
     ],
