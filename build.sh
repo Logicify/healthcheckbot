@@ -53,6 +53,11 @@ do
         echo "Uploading packages on PyPi"
         twine upload -r pypi dist/*
         ;;
+        docker-push)
+        echo "Pushing docker image"
+        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        docker push logicify/healthcheckbot
+        ;;
         *)
         echo "ERROR: Unknown command: $command."
         exit 1
