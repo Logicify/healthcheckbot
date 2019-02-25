@@ -7,8 +7,6 @@ os:
 cache:
   directories:
     - "$HOME/.cache"
-virtualenv:
-  system_site_packages: true
 script: ./build.sh build
 install: python setup.py install
 env:
