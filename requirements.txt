@@ -8,3 +8,4 @@ daemons==1.3.0
 # Development dependencies
 copyright==1.0.1.0
 twine==1.13.0
+m2r==0.2.1

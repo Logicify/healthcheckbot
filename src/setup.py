@@ -23,8 +23,15 @@ src_dir = path.abspath(path.dirname(__file__))
 root_dir = path.join(src_dir, '..')
 
 # Get the long description from the README file
-with open(path.join(root_dir, 'README.MD'), encoding='utf-8') as f:
-    long_description = f.read()
+readme_file = path.join(root_dir, 'README.MD')
+try:
+    from m2r import parse_from_file
+
+    long_description = parse_from_file(readme_file)
+except ImportError:
+    # m2r may not be installed in user environment
+    with open(readme_file) as f:
+        long_description = f.read()
 
 setup(
     name='healthcheckbot',
