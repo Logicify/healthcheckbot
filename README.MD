@@ -10,9 +10,70 @@ Package provides executable `healthcheckbot` which is the main entry point. You 
 your watchers and other options. In order to start application run:
 
 ```
-./healthcheckbot -c ../../examples/config.yaml server run
+healthcheckbot -c examples/config.yaml server run
 ```
 
+If you prefer Docker there is an pre-built image available. You need to create a config file somewhere on host machine 
+and then run docker as follows:
+
+```bash
+docker run --rm -it -v $PWD/myconfigs:/srv/config logicify/healthcheckbot
+```
+
+In this case your config must be named `config.yaml` and it must be located in `./myconfigs` directory on your host.
+
+If you want to use different file you could set it in env variable `CONFIG_FILE`:
+
+```bash
+docker run --rm -it -v $PWD/myconfigs:/srv/config -e CONFIG_FILE=/srv/config/advanced.yaml logicify/healthcheckbot
+```
+
+For the cases when you also need to pass your custom modules (e.g. custom assertions) you need to mount data directory 
+as well. Check the following example:
+
+docker-compose.yaml
+```yaml
+healthcheckbot:
+  image: logicify/healthcheckbot
+  volumes:
+    - ./myconfig:/srv/config
+    - ./mydata:/srv/data
+  environment:
+    CONFIG_FILE: /srv/config/my_config_name.yaml
+```
+
+my_config_name.yaml
+```yaml
+app:
+  classpath:
+    - /srv/data
+
+outputs:
+  console:
+    provider: healthcheckbot.outputs.ConsoleOutput
+
+triggers:
+  each_1_minute:
+    provider: healthcheckbot.triggers.SimpleTimer
+    interval: 60
+
+watchers:
+  google_home:
+    provider: healthcheckbot.watchers.HttpRequest
+    url: http://google.com
+    assert_response_time: 2
+    assert_status: 200
+    triggers:
+      - each_1_minute
+    custom_assertions:
+      check_something_interesting:
+        provider: mypackage.assertions.CustomAssert
+        my_param: 'val1'
+```
+
+In this sample we mount directory `/srv/data` from the host and declare it as a part of classpath so all a python 
+modules from this dir will be accesible from the application in runtime. Thus we can implement `CustomAssert` module
+and use it in our configuration. See [Customization](#customization) section for details.
 
 ## Concepts
 
