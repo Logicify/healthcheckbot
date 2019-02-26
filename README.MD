@@ -1,4 +1,6 @@
 # Healthcheck Bot
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FLogicify%2Fhealthcheckbot.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FLogicify%2Fhealthcheckbot?ref=badge_shield)
+
 
 Healthcheck Bot is a standalone highly configurable and extendable application for verifying application status.
 User is free to configure targets to be tested as well as the way output needs to be delivered. Application also supports custom
@@ -259,3 +261,6 @@ Dmitry Berezovsky, Logicify (http://logicify.com/)
 
 This plug-in is licensed under GPLv3. This allows you free non-commercial use.
 Also note there is no warranty for this free software. Please see the included [LICENSE](LICENSE]) file for details.
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FLogicify%2Fhealthcheckbot.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FLogicify%2Fhealthcheckbot?ref=badge_large)
