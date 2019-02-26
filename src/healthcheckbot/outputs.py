@@ -82,9 +82,10 @@ class GelfOutput(OutputModule):
         self.gelf_logger.propagate = False
         if self.gelf_protocol == 'udp':
             self.gelf_logger.addHandler(
-                GELFHandler(host=self.gelf_host, port=self.gelf_port, extra_fields=True))
+                GELFHandler(host=self.gelf_host, port=self.gelf_port, debugging_fields=False, extra_fields=True))
         elif self.gelf_protocol == 'tcp':
-            handler = GELFTcpHandler(host=self.gelf_host, port=self.gelf_port, extra_fields=True)
+            handler = GELFTcpHandler(host=self.gelf_host, port=self.gelf_port,
+                                     debugging_fields=False, extra_fields=True)
             handler.level = logging.DEBUG
             self.gelf_logger.addHandler(handler)
 
@@ -100,9 +101,14 @@ class GelfOutput(OutputModule):
         if not self.include_validations:
             del data['failed_assertions']
         data = self.__flatten(watcher_result.to_dict())
+        data.update(dict(tags='healthcheck'))
         data.update(self.extra_fields)
-        self.gelf_logger.info('checks {}'.format('passed' if watcher_result.checks_passed else 'failed'),
-                              extra=data)
+        self.gelf_logger.info('HealthcheckBot {}: Watcher {} - checks {}'.format(
+            self.get_application_manager().get_instance_settings().id,
+            watcher_instance.name,
+            'passed' if watcher_result.checks_passed else 'failed'
+        ),
+            extra=data)
 
     PARAMS = (
         ParameterDef('gelf_host', is_required=True),
