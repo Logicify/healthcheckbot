@@ -1,10 +1,35 @@
 # Healthcheck Bot
+
+[![Build Status](https://travis-ci.org/Logicify/healthcheckbot.svg?branch=master)](https://travis-ci.org/Logicify/healthcheckbot)
+![License](https://img.shields.io/github/license/logicify/healthcheckbot.svg)
+![PyPi](https://img.shields.io/pypi/v/healthcheckbot.svg)
+![Last Commit](https://img.shields.io/github/last-commit/logicify/healthcheckbot.svg)
+[![Requirements Status](https://requires.io/github/Logicify/healthcheckbot/requirements.svg?branch=master)](https://requires.io/github/Logicify/healthcheckbot/requirements/?branch=master)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FLogicify%2Fhealthcheckbot.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FLogicify%2Fhealthcheckbot?ref=badge_shield)
+
 
 
 Healthcheck Bot is a standalone highly configurable and extendable application for verifying application status.
 User is free to configure targets to be tested as well as the way output needs to be delivered. Application also supports custom
 assertions written in Python for the cases when check scenario is more complicated.
+
+## When should I use healthcheck bot?
+
+Consider healthcheck bot if you:
+
+* Need proactive software monitoring. This means you have existing software and you need to query it, capture state and 
+compare it to expected results;
+* You need to integrate this proactive checks to existing infrastructure (Graylog, Nagios, whatever)
+* State validation requires more complex comparations then could be defined in DSL\Yaml\JSON. It is easier to express 
+with code.
+* Familiar with Python
+ 
+## Alternatives
+
+If none above is about your case you might want to check the following alternatives:
+
+* [Nagios](https://www.nagios.org/) and it's application checks
+* [Gloss](https://goss.rocks) if you want just ping servers, check ports, server configuration etc.
 
 ## Usage
 
@@ -259,7 +284,7 @@ Dmitry Berezovsky, Logicify (http://logicify.com/)
 
 ## License
 
-This plug-in is licensed under GPLv3. This allows you free non-commercial use.
+This plug-in is licensed under GPLv3. This means you are free to use it even in commercial projects.
 Also note there is no warranty for this free software. Please see the included [LICENSE](LICENSE]) file for details.
 
 
