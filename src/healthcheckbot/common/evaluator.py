@@ -18,7 +18,7 @@ class SelExpression(NamedTuple):
 
 
 def simple_sel_parser(expression: str):
-    def match_cb(m: re.Match):
+    def match_cb(m):
         return evaluate_expression(SelExpression(m.group('name'), m.group('is_func') is not None, m.group('arg')))
 
     return sel_expression_parser.sub(match_cb, expression)
