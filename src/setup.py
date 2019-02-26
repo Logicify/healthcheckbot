@@ -66,7 +66,6 @@ setup(
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         # Python versions support
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
 
