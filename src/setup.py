@@ -95,6 +95,10 @@ setup(
         'examples': [path.join(root_dir, 'examples')],
     },
 
+    test_suite='nose2.collector.collector',
+    tests_require=[
+        'nose2==0.8.0',
+    ],
     entry_points={
         'console_scripts': [
             'healthcheckbot=healthcheckbot.cli:main',

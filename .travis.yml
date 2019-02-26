@@ -1,23 +1,24 @@
 language: python
 python:
-- 3.5
-- 3.6
+  - 3.5
+  - 3.6
 os:
-- linux
+  - linux
 cache:
   directories:
-  - "$HOME/.cache"
+    - "$HOME/.cache"
 services:
   - docker
 script:
-- "./build.sh build"
+  - "nose2"
+  - "./build.sh build"
 install:
-- pip install -r requirements.txt
+  - pip install -r requirements.txt
 env:
   global:
-  - SKIP_VENV=yes
-  - $DOCKER_USERNAME=logicifydeployer
-  - secure: noTBKafmvRHe/NYXGS2ef2dMNQV+abQ/WtNMTG+JbFvQ81ugd7cC+PJI52HfDuhCtOnAlsgayLFlc2hDLEmj3M46CwHicyLHbjI5YhH/IzAIwhorF2Ed+sIDjkEM3L4v43egN2tEQ6N6dNsBkn2YenYXmROalS/C081RQ8h1f3miGcUJcmvTveEVf/ff3ijVa/1WZ5qedIRTh6KgwNKJGffUv8v1qyaVsFvE3cu+419V+f32Wg7WBZ4rrx3sFTUQueudgUySavNfLOPW3WkZr/J4coj806yoyNtnbMsDzaMCzAmXLdDEVxLknPuX/eEO1vxOpg69lPYTagLyw9fn7yf1/FkDQojPtkXHKM/y4uKWCyL0UTE14X/UE2TV5z3UCefAropxakvvap9zk8zRuHIOJJ50UEaXy9oA+YypvYPxweWxAH3Q2HEdq32v3PajwA2L9WxDyZjzqStYpJ9l9+0/5cG1W1ZsEYFBxE3OagBcChWzcJ4hnB4Ed+5gSTj9VlgTa+uGpJJAuMvjUNcQTOU78q6GIhwZsQxfFjs5e8F2KPkKSgbaqDRt4aqkS+Lt0yxv0JTCQyawv+EMcJXU0IscQy5eyjx4oN1LLM1zfEvA5dX8fXIYPVxIZKWSMToVlwK8rskKrulpysL2xAp7QzsF27s6opGRqbVcoEiY3fs=
+    - SKIP_VENV=yes
+    - $DOCKER_USERNAME=logicifydeployer
+    - secure: noTBKafmvRHe/NYXGS2ef2dMNQV+abQ/WtNMTG+JbFvQ81ugd7cC+PJI52HfDuhCtOnAlsgayLFlc2hDLEmj3M46CwHicyLHbjI5YhH/IzAIwhorF2Ed+sIDjkEM3L4v43egN2tEQ6N6dNsBkn2YenYXmROalS/C081RQ8h1f3miGcUJcmvTveEVf/ff3ijVa/1WZ5qedIRTh6KgwNKJGffUv8v1qyaVsFvE3cu+419V+f32Wg7WBZ4rrx3sFTUQueudgUySavNfLOPW3WkZr/J4coj806yoyNtnbMsDzaMCzAmXLdDEVxLknPuX/eEO1vxOpg69lPYTagLyw9fn7yf1/FkDQojPtkXHKM/y4uKWCyL0UTE14X/UE2TV5z3UCefAropxakvvap9zk8zRuHIOJJ50UEaXy9oA+YypvYPxweWxAH3Q2HEdq32v3PajwA2L9WxDyZjzqStYpJ9l9+0/5cG1W1ZsEYFBxE3OagBcChWzcJ4hnB4Ed+5gSTj9VlgTa+uGpJJAuMvjUNcQTOU78q6GIhwZsQxfFjs5e8F2KPkKSgbaqDRt4aqkS+Lt0yxv0JTCQyawv+EMcJXU0IscQy5eyjx4oN1LLM1zfEvA5dX8fXIYPVxIZKWSMToVlwK8rskKrulpysL2xAp7QzsF27s6opGRqbVcoEiY3fs=
 deploy:
   provider: pypi
   user: logicify
@@ -29,5 +30,5 @@ deploy:
   on:
     tags: true
 after_deploy:
-- docker build -t logicify/healthcheckbot:latest -t logicify/healthcheckbot:$TRAVIS_TAG --build-arg="VERSION=$TRAVIS_TAG" .
-- ./build.sh docker-push
+  - docker build -t logicify/healthcheckbot:latest -t logicify/healthcheckbot:$TRAVIS_TAG --build-arg="VERSION=$TRAVIS_TAG" .
+  - ./build.sh docker-push

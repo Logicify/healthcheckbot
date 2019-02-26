@@ -14,10 +14,15 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 class SimpleException(Exception):
     def __init__(self, message, ex=None):
         self.message = message
         self.ex = ex
+
+
+class ExpressionEvaluationError(SimpleException):
+    pass
 
 
 class InvalidModuleError(SimpleException):

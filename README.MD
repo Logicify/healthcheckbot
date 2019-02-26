@@ -26,7 +26,7 @@ with code.
  
 ## Alternatives
 
-If none above is about your case you might want to check the following alternatives:
+If none of the above is about your case you might want to check the following alternatives:
 
 * [Nagios](https://www.nagios.org/) and it's application checks
 * [Gloss](https://goss.rocks) if you want just ping servers, check ports, server configuration etc.
