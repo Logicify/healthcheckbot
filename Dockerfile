@@ -8,7 +8,7 @@ ENV CONFIG_FILE "/srv/config/config.yaml"
 VOLUME /srv/config
 VOLUME /srv/data
 
-CMD healthcheckbot -c "${CONFIG_FILE}" server run
+CMD healthcheckbot -c "${CONFIG_FILE}" run
 
 RUN : "${VERSION:?Version argument should be set. Use --build-arg=VERSION=0.0.0}" \
     && pip install healthcheckbot==${VERSION}

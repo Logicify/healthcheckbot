@@ -37,7 +37,7 @@ Package provides executable `healthcheckbot` which is the main entry point. You 
 your watchers and other options. In order to start application run:
 
 ```
-healthcheckbot -c examples/config.yaml server run
+healthcheckbot -c examples/config.yaml run
 ```
 
 If you prefer Docker there is an pre-built image available. You need to create a config file somewhere on host machine 

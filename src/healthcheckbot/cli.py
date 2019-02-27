@@ -67,7 +67,7 @@ _config = None
 namespace_parsers = {}
 
 
-class ServerRunCLIExtension(CliExtension):
+class ApplicationRunCLIExtension(CliExtension):
     COMMAND_NAME = 'run'
     COMMAND_DESCRIPTION = 'Run Healthcheck Bot in foreground'
 
@@ -75,6 +75,21 @@ class ServerRunCLIExtension(CliExtension):
         global _config
         bootstrapped_app = bootstrap.bootstrap_from_cli(_config, self.get_application_manager())
         app.run_application(_config, bootstrapped_app)
+
+
+class VerifyConfigCLIExtension(CliExtension):
+    COMMAND_NAME = 'verify'
+    COMMAND_DESCRIPTION = 'Verify configuration file end exit'
+
+    def handle(self, args):
+        global _config
+        try:
+            bootstrapped_app = bootstrap.bootstrap_from_cli(_config, self.get_application_manager())
+            CLI.print_info("Config file is valid")
+        except Exception as e:
+            CLI.print_error("Config file is invalid")
+            CLI.print_error(e)
+            exit(1)
 
 
 def get_default_config_path():
@@ -101,16 +116,25 @@ def read_config_from_arguments() -> dict:
         exit(1)
 
 
+def configure_subparser_for_cli_extension(ext, parser, application):
+    ext.setup_parser(parser)
+    ext_instance = ext(parser, application)
+    parser.set_defaults(handler=ext_instance)
+
+
 def main():
     global _config
     logging.basicConfig(level=logging.DEBUG)
     _config = read_config_from_arguments()
     application = bootstrap.bootstrap_cli(_config)
-    # Register built-in CLI extensions
-    application.cli_extensions.append(
-        ('server', ServerRunCLIExtension)
-    )
-    # process CLI extensions
+    # Register root commands
+    root_commands = (ApplicationRunCLIExtension, VerifyConfigCLIExtension)
+    # Process root commands
+    for cmd in root_commands:
+        cmd_subparser = module_parser.add_parser(cmd.COMMAND_NAME, help=cmd.COMMAND_DESCRIPTION)
+        configure_subparser_for_cli_extension(cmd, cmd_subparser, application)
+
+    # Process CLI extensions
     for namespace, ext in application.cli_extensions:
         if namespace not in namespace_parsers.keys():
             p = module_parser.add_parser(namespace)
@@ -121,9 +145,7 @@ def main():
                 "Invalid CLI Extension: {}. COMMAND_NAME needs to be defined".format(ext.__class__.__name__))
         ext_subparser = ext_parser.add_parser(ext.COMMAND_NAME,
                                               help=ext.COMMAND_DESCRIPTION)
-        ext.setup_parser(ext_subparser)
-        ext_instance = ext(ext_subparser, application)
-        ext_subparser.set_defaults(handler=ext_instance)
+        configure_subparser_for_cli_extension(ext, ext_subparser, application)
 
     args = parser.parse_args()
     gc.collect()
