@@ -9,54 +9,49 @@
 
 
 
-Healthcheck Bot is a standalone highly configurable and extendable application for verifying application status.
-User is free to configure targets to be tested as well as the way output needs to be delivered. Application also supports custom
-assertions written in Python for the cases when check scenario is more complicated.
+Healthcheck Bot is a standalone, highly configurable and extendable, application for verifying the status of your software products.
+The user is free to configure which targets to test, which metrics to monitor, and where to store check outcomes. Healthcheck Bot also supports custom assertions written in Python for more sophisticated check scenarios.
 
-## When should I use healthcheck bot?
+## When Should I Use Healthcheck Bot?
 
-Consider healthcheck bot if you:
+Consider using Healthcheck Bot if:
 
-* Need proactive software monitoring. This means you have existing software and you need to query it, capture state and 
-compare it to expected results;
-* You need to integrate this proactive checks to existing infrastructure (Graylog, Nagios, whatever)
-* State validation requires more complex comparations then could be defined in DSL\Yaml\JSON. It is easier to express 
-with code.
-* Familiar with Python
+* you need proactive monitoring of your software. This means you have an existing application in place, and you need to query it, regularly capture its state and compare it to the expected one;
+* you want to load the outcomes of proactive healthchecks into existing infrastructure (Graylog, Nagios, whatever)
+* the validation of your system state requires more complex comparations than the ones defined in DSL\Yaml\JSON, which are easier to express with code.
+* you are familiar with Python.
  
-## Alternatives
+## Alternative Solutions
 
-If none of the above is about your case you might want to check the following alternatives:
+If none of the above describes your case, you might want to consider one of the following alternatives:
 
-* [Nagios](https://www.nagios.org/) and it's application checks
-* [Gloss](https://goss.rocks) if you want just ping servers, check ports, server configuration etc.
+* [Nagios](https://www.nagios.org/) and its application checks
+* [Gloss](https://goss.rocks) if you need just servers pings, ports checks, server configuration etc.
 
-## Usage
+## Healthcheck Bot Usage
 
-Package provides executable `healthcheckbot` which is the main entry point. You must pass a configuration file containing definitions of
-your watchers and other options. In order to start application run:
+The package provides executable `healthcheckbot` as the main entry point. You must pass a configuration file containing definitions of
+your watchers and other options. In order to start the application, run:
 
 ```
 healthcheckbot -c examples/config.yaml run
 ```
 
-If you prefer Docker there is an pre-built image available. You need to create a config file somewhere on host machine 
-and then run docker as follows:
+If you prefer Docker, there is a pre-built image available. You need to create a config file somewhere on host machine and run Docker as follows:
 
 ```bash
 docker run --rm -it -v $PWD/myconfigs:/srv/config logicify/healthcheckbot
 ```
 
-In this case your config must be named `config.yaml` and it must be located in `./myconfigs` directory on your host.
+In this case, your config must be named `config.yaml`; it must be located in `./myconfigs` directory on your host machine.
 
-If you want to use different file you could set it in env variable `CONFIG_FILE`:
+If you want to use a different file, you could set it in env variable `CONFIG_FILE`:
 
 ```bash
 docker run --rm -it -v $PWD/myconfigs:/srv/config -e CONFIG_FILE=/srv/config/advanced.yaml logicify/healthcheckbot
 ```
 
-For the cases when you also need to pass your custom modules (e.g. custom assertions) you need to mount data directory 
-as well. Check the following example:
+For the cases when you also need to pass your custom modules, e.g. custom assertions, you need to mount data directory as well. Check the following example:
 
 docker-compose.yaml
 ```yaml
@@ -98,9 +93,7 @@ watchers:
         my_param: 'val1'
 ```
 
-In this sample we mount directory `/srv/data` from the host and declare it as a part of classpath so all a python 
-modules from this dir will be accesible from the application in runtime. Thus we can implement `CustomAssert` module
-and use it in our configuration. See [Customization](#customization) section for details.
+In this sample, we mount directory `/srv/data` from the host and declare it as a part of classpath, so all Python modules from this dir are accessible from the application in runtime. Thus, we can implement `CustomAssert` module and use it in our configuration. See [Customization](#customization) section for details.
 
 ## Concepts
 
@@ -125,26 +118,25 @@ watchers:
       - each_1_minute
 ```
 
-In this example we define one single watcher which will send HTTP request to `http://google.com` each minute.
-Healthcheck will be treated as failed when response status will be not `200`.
-Result of the watcher evaluation will be printed to STDOUT.
+In this example, we define a single watcher that will send HTTP request to `http://google.com` each minute.
+Healthcheck will be treated as failed when the response status is not `200`.
+The result of the watcher evaluation will be printed to STDOUT.
 
-Generally there are 4 types of entities(module types) healthcheckbot works with: Outputs, Triggers, Watchers, WatcherAsserts.
-Sections below describe each one. Please also note that user has an ability to implement own module
-to extend or override default behaviour and connect it without modifying core code. See [Customization](#customization) section below.
-Regardless of the module type you define there is one mandatory component called `provider`. It defines fully qualified name
+Generally, there are 4 types of entities (module types) Healthcheck Bot works with: Outputs, Triggers, Watchers, WatcherAsserts.
+Sections below describe each of them. Please also note that user is able to implement their own module to extend or override default behaviour and connect it without modifying the core code. See [Customization](#customization) section below.
+Regardless of the module type you define, there is a mandatory component called `provider`. It defines fully qualified name
 of the class implementing corresponding module. The rest of options are parameters for module instance.
 
 ### Outputs
 
-Output define the way how watcher evaluation result will be delivered to the end user. It might be as simple as just console output
-or more real life write to database or centralized metric collection system like CloudWatch or Graylog2.
+Output defines the way watcher's evaluation result will be delivered to the end user. It might be as simple as just console output
+or a more real-life and common record in a database, or a centralized metric collection for a system like CloudWatch or Graylog2.
 
-The are a couple of implementations of outputs built-in the package.
+There is a couple of implementations of outputs built in the package.
 
-#### Console output
+#### Console Output
 
-Just prints serialized json output to the stdout. There are no any configuration parameters.
+Just prints serialized JSON output to the STDOUT. There are no configuration parameters.
 
 Usage Example:
 
@@ -154,30 +146,30 @@ outputs:
     provider: healthcheckbot.outputs.ConsoleOutput
 ```
 
-#### Logger output
+#### Logger Output
 
-This one is very similar to console output but serialized result will be passed to the logger.
+This one is very similar to console output, but the serialized result will be passed to the logger.
 
 Parameters
 
-| Parameter  | Description                              | Default Value | Required |
-| ---------- | ---------------------------------------- | ------------- | -------- |
-| log_level  | Log level to be used when output result. | INFO          | No       |
-| loger_name | Name of the logger to use                | OUT           | No       |
+| Parameter  | Description                                 | Default Value | Required |
+| ---------- | ------------------------------------------- | ------------- | -------- |
+| log_level  | Log level to be used when outputting result | INFO          | No       |
+| loger_name | Name of the logger to use                   | OUT           | No       |
 
 
 ### Triggers
 
-Triggers responsible for initiation of worker execution. The most common use case is periodic run but other scenarios are possible as well e.g. execution after HTTP call.
+Triggers are responsible for initiation of worker execution. The most common use case is periodic run, but other scenarios are possible as well, e.g. execution after HTTP call.
 
 #### Simple Timer
 
-This implementation of the trigger is pretty self explanatory - all it does is periodic watchers execution with constant interval specified as parameter.
+This implementation of the trigger is pretty self-explanatory - all it does is periodic watchers execution with constant interval specified as a parameter.
 
 | Parameter         | Description                              | Default Value | Required |
 | ----------------- | ---------------------------------------- | ------------- | -------- |
 | interval          | Time interval in seconds between iterations | 300           | No       |
-| start_immediately | If set to True the first iteration will be triggered immediately after application start, otherwise in `interval` seconds | True          | No       |
+| start_immediately | If set to True, the first iteration will be triggered immediately after application starts; otherwise, in `interval` seconds | True          | No       |
 
 Example
 
@@ -193,10 +185,10 @@ triggers:
 
 ### Watchers
 
-Watchers are modules who actually read the state and could optionally run some assertions over the state. Parameters mostly depend on implementation but there are a couple of options common for all watchers.
+Watchers are modules that actually read the system state and could optionally run some assertions over a certain state. Their parameters mostly depend on implementation, but there is a couple of options common for all watchers.
 
-* `triggers` - a list of trigger names which will invoke given watcher. It is important to list at list one trigger otherwise watcher will be never invoked.
-* `custom_assertions` - a dictionary containing assertions to be applied as a part of state verification after regular module assertions. See section [Watcher Asserts](#watcher-asserts) for details.
+* `triggers` - the list of trigger names that will invoke the given watcher. It is important to list at least one trigger, otherwise, the watcher will never be invoked.
+* `custom_assertions` - the dictionary containing assertions to be applied as a part of state verification after regular module assertions. See section [Watcher Asserts](#watcher-asserts) for details.
 
 ### Watcher Asserts
 
@@ -204,7 +196,7 @@ TBD
 
 ## Customization
 
-An ability to extend behavior of any module is a key feature of HealthcheckBot. In order to make it easier load modules from the outside user could extend classpath (folders to be scanned for classes) with the simple configuration option. Consider the following example:
+User's ability to extend the behavior of any module is a key feature of Healthcheck Bot. In order to make it easier to load modules from the outside, user could extend classpath (folders to be scanned for classes) with a simple configuration option. Consider the following example:
 
 ```yaml
 app:  
@@ -232,7 +224,7 @@ Our `/tmp/logicify` folder looks as follows:
 └── __init__.py
 ```
 
-File `watchers.py` contains class `SystemTimeWatcher` which implements `WatcherModule`:
+File `watchers.py` contains class `SystemTimeWatcher` that implements `WatcherModule`:
 
 ```python
 class SystemTimeWatcher(WatcherModule):
@@ -260,19 +252,19 @@ class SystemTimeWatcher(WatcherModule):
     )
 ```
 
-This implementation illustrates how you could create own watchers. While this example shows only watcher module many concepts apply to the Triggers, Outputs and Asserts.
+This implementation illustrates how you could create your own watchers. While this example shows only a watcher module, many concepts apply to the Triggers, Outputs and Asserts too.
 
-`PARAMS` tuple gives you a way to configure arguments for your module. During application bootstrap parameters from yaml will be sanitized, validated and assigned to the module instance according to definition configured with ParameterDef. 
+`PARAMS` tuple gives you a way to configure arguments for your module. During application, bootstrap parameters from `yaml` will be sanitized, validated and assigned to the module instance according to definition configured with `ParameterDef`. 
 
-Method `obtain_state` will be invoked by trigger. You should implement your state gathering logic here. Result could be any object.
+Method `obtain_state` will be invoked by the trigger. You should implement your state gathering logic here. The result could be any object.
 
-`do_assertions` will be invoked on state verification stage. `state` parameter here is what was returned from `obtain_state` and `reporter` instance must be used to report assertion errors if any.
+`do_assertions` will be invoked on state verification stage. `state` parameter here is what was returned from `obtain_state`, and `reporter` instance must be used to report assertion errors (if any).
 
-And finally `serialize_state` will be called at the very and before passing result to output. It should convert state object to simple types (dictionaries, lists, primitives).
+And finally, `serialize_state` will be called before passing the result to output. It should convert state object to simple types (dictionaries, lists, primitives).
 
 ##  Contribution
 
-Initial dev environment configuration:
+The initial configuration of dev environment:
 
 1. `virtualenv -p python3 venv`
 1. `source ./venv/bin/activate`
