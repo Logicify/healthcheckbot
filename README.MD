@@ -26,7 +26,7 @@ Consider using Healthcheck Bot if:
 If none of the above describes your case, you might want to consider one of the following alternatives:
 
 * [Nagios](https://www.nagios.org/) and its application checks
-* [Gloss](https://goss.rocks) if you need just servers pings, ports checks, server configuration etc.
+* [Goss](https://goss.rocks) if you need just servers pings, ports checks, server configuration etc.
 
 ## Healthcheck Bot Usage
 
