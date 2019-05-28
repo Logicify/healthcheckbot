@@ -24,6 +24,7 @@ import yaml
 
 from healthcheckbot.common.core import ApplicationManager
 from healthcheckbot.common.error import ConfigValidationError
+from healthcheckbot.common.evaluator import simple_env_evaluator
 from healthcheckbot.common.model import Module, WatcherModule
 from healthcheckbot.common.utils import EvaluatingConfigWrapper
 
@@ -60,8 +61,8 @@ def bootstrap_cli(config: dict) -> ApplicationManager:
 def bootstrap_environment(config: dict, enable_cli=False) -> ApplicationManager:
     application = new_application()
     logger.info('Reading config file')
-    wrapped_config = EvaluatingConfigWrapper(config)
-    save_instance_config(wrapped_config, application)
+    config = add_expression_evaluator(config)
+    save_instance_config(config, application)
     load_context_path(application)
     return application
 
@@ -71,6 +72,8 @@ def new_application(enable_cli=False):
     application.get_instance_settings().enable_cli = enable_cli
     return application
 
+def add_expression_evaluator(config_section: dict) -> EvaluatingConfigWrapper:
+    return EvaluatingConfigWrapper(config_section, simple_env_evaluator)
 
 def save_instance_config(config: dict, application: ApplicationManager):
     if 'app' in config:
@@ -101,12 +104,13 @@ def instantiate_modules_for_section(section_name: str, section_config: dict, app
         if not (isinstance(module_def, dict) and 'provider' in module_def):
             raise ConfigValidationError('/'.join((section_name, name)),
                                         'Should be dictionary containing mandatory key "provider"')
+        module_def = add_expression_evaluator(module_def)
         instance = application.register_module_instance(instance_name_prefix + name, module_def.get('provider'))
         try:
             # Parse and set parameters
             for param_def in instance.PARAMS:
                 if param_def.name in module_def:
-                    val = module_def[param_def.name]
+                    val = module_def.get(param_def.name)
                     if param_def.parser is not None:
                         val = param_def.parser.parse(val, application, '/'.join((section_name, name, param_def.name)))
                     val = param_def.sanitize(val)

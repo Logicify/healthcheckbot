@@ -15,7 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import traceback
-from typing import Callable
+from typing import Callable, Optional, Any
 
 import collections
 import sys
@@ -27,12 +27,17 @@ class EvaluatingConfigWrapper(dict, collections.UserDict):
         super().__init__(source)
         self.evaluator = evaluator
 
+    def get(self, k, default=None) -> Optional[Any]:
+        try:
+            return self[k]
+        except KeyError:
+            return default
+
     def __getitem__(self, key):
-        original = self.data.get(key)
+        original = dict.__getitem__(self, key)
         if isinstance(original, str) and self.evaluator is not None:
             return self.evaluator(original)
         return original
-
 
 
 class CLI:
