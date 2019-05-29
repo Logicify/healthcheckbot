@@ -62,6 +62,7 @@ class GelfOutput(OutputModule):
         self.gelf_port = 9402  # type: int
         self.gelf_host = None  # type: str
         self.gelf_protocol = 'udp'
+        self.facility = 'healthcheck'
         self.include_state = True
         self.include_validations = True
         self.extra_fields = {}
@@ -82,9 +83,9 @@ class GelfOutput(OutputModule):
         self.gelf_logger.propagate = False
         if self.gelf_protocol == 'udp':
             self.gelf_logger.addHandler(
-                GELFHandler(host=self.gelf_host, port=self.gelf_port, debugging_fields=False, extra_fields=True))
+                GELFHandler(host=self.gelf_host, port=self.gelf_port, facility=self.facility, debugging_fields=False, extra_fields=True))
         elif self.gelf_protocol == 'tcp':
-            handler = GELFTcpHandler(host=self.gelf_host, port=self.gelf_port,
+            handler = GELFTcpHandler(host=self.gelf_host, facility=self.facility, port=self.gelf_port,
                                      debugging_fields=False, extra_fields=True)
             handler.level = logging.DEBUG
             self.gelf_logger.addHandler(handler)
@@ -114,6 +115,7 @@ class GelfOutput(OutputModule):
         ParameterDef('gelf_host', is_required=True),
         ParameterDef('gelf_port', validators=(validators.integer,)),
         ParameterDef('gelf_protocol', validators=(validators.string,)),
+        ParameterDef('facility', validators=(validators.string,)),
         ParameterDef('include_state', validators=(validators.boolean,)),
         ParameterDef('include_validations', validators=(validators.boolean,)),
         ParameterDef('extra_fields', validators=(validators.dict_of_strings,)),

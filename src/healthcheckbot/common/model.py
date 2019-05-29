@@ -160,7 +160,7 @@ class WatcherResult:
     def to_dict(self) -> typing.Dict:
         return {
             'failed_assertions': [x._asdict() for x in self.assertions_failed],
-            'checks_passed': self.checks_passed,
+            'checks_passed': int(self.checks_passed),
             'state': self.state,
         }
 

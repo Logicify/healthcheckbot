@@ -72,12 +72,14 @@ def new_application(enable_cli=False):
     application.get_instance_settings().enable_cli = enable_cli
     return application
 
+
 def add_expression_evaluator(config_section: dict) -> EvaluatingConfigWrapper:
     return EvaluatingConfigWrapper(config_section, simple_env_evaluator)
 
+
 def save_instance_config(config: dict, application: ApplicationManager):
     if 'app' in config:
-        app_config = config.get('app')
+        app_config = add_expression_evaluator(config.get('app', {}))
         settings = application.get_instance_settings()
         settings.id = app_config.get('id', 'healthcheckbot0')
         # Context Path
