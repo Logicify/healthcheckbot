@@ -92,6 +92,9 @@ class HttpRequest(WatcherModule):
         ParameterDef('method', validators=(validators.string,)),
         ParameterDef('auth_user', validators=(validators.string,)),
         ParameterDef('auth_password', validators=(validators.string,)),
+        ParameterDef('headers', validators=(validators.dict_of_strings,)),
+        ParameterDef('timeout', validators=(validators.integer,)),
+        ParameterDef('payload'),
         ParameterDef('assert_status'),
         ParameterDef('assert_response_time', validators=(validators.number,)),
     )
