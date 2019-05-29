@@ -102,7 +102,7 @@ class GelfOutput(OutputModule):
         if not self.include_validations:
             del data['failed_assertions']
         data = self.__flatten(watcher_result.to_dict())
-        data.update(dict(tags='healthcheck'))
+        data.update(dict(tags='healthcheck', watcher_name=watcher_instance.name))
         data.update(self.extra_fields)
         self.gelf_logger.info('HealthcheckBot {}: Watcher {} - checks {}'.format(
             self.get_application_manager().get_instance_settings().id,
