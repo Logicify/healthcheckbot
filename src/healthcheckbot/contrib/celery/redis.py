@@ -64,6 +64,7 @@ class RedisQueueSizeWatcher(WatcherModule):
     PARAMS = (
         ParameterDef('url', validators=(validators.string,)),
         ParameterDef('host', validators=(validators.string,)),
+        ParameterDef('queue_name', validators=(validators.string,)),
         ParameterDef('port', validators=(validators.integer,)),
         ParameterDef('db', validators=(validators.integer,)),
         ParameterDef('assert_min_qty', validators=(validators.integer,)),
