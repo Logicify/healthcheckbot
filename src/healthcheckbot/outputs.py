@@ -49,6 +49,7 @@ class LoggerOutput(OutputModule):
         ParameterDef('logger_name', is_required=True),
         ParameterDef('log_level', sanitize_fn=lambda level_name: logging._nameToLevel.get(level_name.upper()),
                      validators=(validators.integer,)),
+        ParameterDef('facility', validators=(validators.string,)),
         ParameterDef('include_instance_name', validators=(validators.boolean,)),
         ParameterDef('include_state', validators=(validators.boolean,)),
         ParameterDef('include_validations', validators=(validators.boolean,)),
@@ -65,6 +66,7 @@ class GelfOutput(OutputModule):
         self.facility = 'healthcheck'
         self.include_state = True
         self.include_validations = True
+        self.include_instance_name = True
         self.extra_fields = {}
 
     def __flatten(self, dictionary, parent_key='', sep='__'):
@@ -103,6 +105,8 @@ class GelfOutput(OutputModule):
             del data['failed_assertions']
         data = self.__flatten(watcher_result.to_dict())
         data.update(dict(tags='healthcheck', watcher_name=watcher_instance.name))
+        if self.include_instance_name:
+            data['instance'] = self.get_application_manager().get_instance_settings().id
         if len(watcher_result.extra.keys()) > 0 and 'extra' in data:
             data.update(self.__flatten(watcher_result.extra))
             del data['extra']
