@@ -139,7 +139,7 @@ class ApplicationManager:
                     'Watcher "{}" was unable to run assertions check: {}'.format(watcher.name, str(e)), e)
         try:
             serialized_state = watcher.serialize_state(state)
-            watcher_result = WatcherResult(serialized_state, reporter.errors)
+            watcher_result = WatcherResult(serialized_state, reporter.errors, reporter.extra_data)
         except Exception as e:
             raise WatcherRuntimeError(
                 'Watcher "{}" was unable serialize state: {}'.format(watcher.name, str(e)), e)

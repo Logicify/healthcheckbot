@@ -153,15 +153,18 @@ class ValidationError(typing.NamedTuple):
 
 class WatcherResult:
 
-    def __init__(self, state: dict = None, assertions_failed: List[ValidationError] = None) -> None:
+    def __init__(self, state: dict = None, assertions_failed: List[ValidationError] = None,
+                 extra: typing.Dict[str, str] = None) -> None:
         self.assertions_failed = assertions_failed
         self.state = state or {}
+        self.extra = extra or {}
 
     def to_dict(self) -> typing.Dict:
         return {
             'failed_assertions': [x._asdict() for x in self.assertions_failed],
             'checks_passed': int(self.checks_passed),
             'state': self.state,
+            'extra': self.extra
         }
 
     @property
@@ -180,9 +183,13 @@ class ValidationReporter:
         self.watcher = watcher
         self.trigger = trigger
         self.errors = []  # type: List[ValidationError]
+        self.extra_data = {}
 
     def error(self, name: str, description: str = None, critical=True):
         self.errors.append(ValidationError(name=name, description=description, critical=critical))
+
+    def extra(self, field: str, value: str):
+        self.extra_data[field] = value
 
 
 class WatcherModule(Module):

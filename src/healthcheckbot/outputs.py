@@ -103,6 +103,9 @@ class GelfOutput(OutputModule):
             del data['failed_assertions']
         data = self.__flatten(watcher_result.to_dict())
         data.update(dict(tags='healthcheck', watcher_name=watcher_instance.name))
+        if len(watcher_result.extra.keys()) > 0 and 'extra' in data:
+            data.update(self.__flatten(watcher_result.extra))
+            del data['extra']
         data.update(self.extra_fields)
         self.gelf_logger.info('HealthcheckBot {}: Watcher {} - checks {}'.format(
             self.get_application_manager().get_instance_settings().id,
