@@ -12,5 +12,7 @@ CMD healthcheckbot -c "${CONFIG_FILE}" run
 
 ADD contrib-dependencies.txt /srv/contrib-dependencies.txt
 
+RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
+
 RUN : "${VERSION:?Version argument should be set. Use --build-arg=VERSION=0.0.0}" \
     && pip install healthcheckbot==${VERSION} && pip install -r /srv/contrib-dependencies.txt
