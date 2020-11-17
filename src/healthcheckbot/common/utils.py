@@ -35,8 +35,11 @@ class EvaluatingConfigWrapper(dict, collections.UserDict):
 
     def __getitem__(self, key):
         original = dict.__getitem__(self, key)
-        if isinstance(original, str) and self.evaluator is not None:
-            return self.evaluator(original)
+        if self.evaluator is not None:
+            if isinstance(original, str):
+                return self.evaluator(original)
+            elif isinstance(original, dict) and not isinstance(original, EvaluatingConfigWrapper):
+                return self.__class__(original, self.evaluator)
         return original
 
 

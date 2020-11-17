@@ -21,8 +21,6 @@ import typing
 from argparse import ArgumentParser
 from typing import List
 
-import yaml
-
 
 class CliExtension(object):
     """
