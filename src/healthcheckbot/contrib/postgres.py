@@ -48,7 +48,8 @@ class DatabaseQueryWatcher(WatcherModule):
         return json.dumps(state, cls=DecimalEncoder)
 
     def on_configured(self):
-        self.conn = psycopg2.connect(**self.db_connection, cursor_factory=RealDictCursor)
+        connection_params = {k: self.db_connection[k] for k in self.db_connection.keys()}
+        self.conn = psycopg2.connect(**connection_params, cursor_factory=RealDictCursor)
 
     def obtain_state(self, trigger) -> object:
         cur = self.conn.cursor()
