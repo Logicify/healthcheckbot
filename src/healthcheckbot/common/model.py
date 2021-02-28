@@ -195,6 +195,8 @@ class WatcherModule(Module):
     def __init__(self, application):
         super().__init__(application)
         self.enable_assertions = True
+        # Max execution time for obtain state section
+        self.execution_timeout = 60
         self.custom_assertions = []  # type: List[WatcherAssert]
 
     def obtain_state(self, trigger) -> object:

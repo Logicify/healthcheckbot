@@ -13,12 +13,16 @@
 #    
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-import traceback
-from typing import Callable, Optional, Any
-
+import _thread
 import collections
 import sys
+import threading
+import traceback
+from contextlib import contextmanager
+
+from typing import Callable, Optional, Any
+
+from healthcheckbot.common.error import ExecutionTimeoutError
 
 
 class EvaluatingConfigWrapper(dict, collections.UserDict):
@@ -65,3 +69,16 @@ class CLI:
     def print_debug(cls, string_to_print):
         if cls.verbose_mode:
             print('[DEBUG] ' + string_to_print, file=sys.stderr)
+
+
+@contextmanager
+def time_limit(seconds, msg):
+    timer = threading.Timer(seconds, lambda: _thread.interrupt_main())
+    timer.start()
+    try:
+        yield
+    except KeyboardInterrupt:
+        raise ExecutionTimeoutError("Timed out for operation {}".format(msg))
+    finally:
+        # if the action ends in specified time, timer is canceled
+        timer.cancel()

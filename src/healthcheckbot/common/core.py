@@ -21,6 +21,7 @@ from typing import List, Tuple, Type, NamedTuple, Dict
 from healthcheckbot.common.error import InvalidModuleError, WatcherRuntimeError, OutputRuntimeError
 from healthcheckbot.common.model import CliExtension, Module, TriggerModule, OutputModule, WatcherModule, \
     ValidationReporter, WatcherResult, LoopModuleMixin, WatcherAssert
+from healthcheckbot.common.utils import time_limit
 
 
 class ModuleType(NamedTuple):
@@ -121,7 +122,8 @@ class ApplicationManager:
     def run_watcher(self, watcher: WatcherModule, trigger: TriggerModule) -> WatcherResult:
         reporter = ValidationReporter(watcher, trigger)
         try:
-            state = watcher.obtain_state(trigger)
+            with time_limit(watcher.execution_timeout, msg="Execution watcher timeout"):
+                state = watcher.obtain_state(trigger)
         except Exception as e:
             raise WatcherRuntimeError(
                 'Watcher "{}" was unable to finish obtain state cycle: {}'.format(watcher.name, str(e)), e)

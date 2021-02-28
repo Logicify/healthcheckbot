@@ -20,6 +20,10 @@ class SimpleException(Exception):
         self.ex = ex
 
 
+class ExecutionTimeoutError(SimpleException):
+    pass
+
+
 class ExpressionEvaluationError(SimpleException):
     pass
 
