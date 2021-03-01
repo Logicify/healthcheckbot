@@ -17,7 +17,7 @@
 from os import path
 from setuptools import setup, find_packages
 
-from healthcheckbot.__version__ import version
+from healthcheckbot.__version__ import __version__
 
 src_dir = path.abspath(path.dirname(__file__))
 root_dir = path.join(src_dir, '..')
@@ -37,7 +37,7 @@ setup(
     name='healthcheckbot',
     # Semantic versioning should be used:
     # https://packaging.python.org/distributing/?highlight=entry_points#semantic-versioning-preferred
-    version=version,
+    version=__version__,
     description='Robust way to setup external health checks for your software',
     long_description=long_description,
     url='https://githib.com/Logicify/healthcheckbot',
