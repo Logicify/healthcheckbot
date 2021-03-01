@@ -24,10 +24,18 @@ watchers:
     triggers:
       - each_1_minute
 
+  dns_doesnt_exist:
+    provider: healthcheckbot.watchers.HttpRequest
+    url: http://blahblah123blah.com/
+    assert_response_time: 2
+    assert_status: 200
+    triggers:
+      - each_1_minute
+
   google_home:
     provider: healthcheckbot.watchers.HttpRequest
     url: http://google.com
-    assert_response_time: 2
+    assert_response_time: 3
     assert_status: 200
     triggers:
       - each_1_minute
