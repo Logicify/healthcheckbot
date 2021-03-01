@@ -1,16 +1,16 @@
 #    Healthcheck Bot
 #    Copyright (C) 2018 Dmitry Berezovsky
-#    
+#
 #    HealthcheckBot is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
-#    
+#
 #    HealthcheckBot is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
-#    
+#
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -26,6 +26,7 @@ class CliExtension(object):
     """
     Allows Module to extend CLI interface
     """
+
     COMMAND_NAME = None
     COMMAND_DESCRIPTION = None
 
@@ -69,7 +70,7 @@ class JsonSerializer(Serializer):
 
 
 class ConfigParser(object):
-    def parse(self, config_section: dict, application, absolute_path: str = ''):
+    def parse(self, config_section: dict, application, absolute_path: str = ""):
         """
         :param config_section:
         :param absolute_path: String containing absolute path from the config root to the given section.
@@ -80,8 +81,14 @@ class ConfigParser(object):
 
 
 class ParameterDef:
-    def __init__(self, name: str, is_required=False, validators=None, parser: ConfigParser = None,
-                 sanitize_fn: typing.Callable[[object], object] = None):
+    def __init__(
+        self,
+        name: str,
+        is_required=False,
+        validators=None,
+        parser: ConfigParser = None,
+        sanitize_fn: typing.Callable[[object], object] = None,
+    ):
         super().__init__()
         self.name = name
         self.is_required = is_required
@@ -99,7 +106,7 @@ class ParameterDef:
     def validate(self, value):
         for x in self.validators:
             if not x(value):
-                raise ValueError('Parameter {} is invalid'.format(self.name))
+                raise ValueError("Parameter {} is invalid".format(self.name))
 
 
 class Module:
@@ -150,19 +157,22 @@ class ValidationError(typing.NamedTuple):
 
 
 class WatcherResult:
-
-    def __init__(self, state: dict = None, assertions_failed: List[ValidationError] = None,
-                 extra: typing.Dict[str, str] = None) -> None:
+    def __init__(
+        self,
+        state: dict = None,
+        assertions_failed: List[ValidationError] = None,
+        extra: typing.Dict[str, str] = None,
+    ) -> None:
         self.assertions_failed = assertions_failed
         self.state = state or {}
         self.extra = extra or {}
 
     def to_dict(self) -> typing.Dict:
         return {
-            'failed_assertions': [x._asdict() for x in self.assertions_failed],
-            'checks_passed': int(self.checks_passed),
-            'state': self.state,
-            'extra': self.extra
+            "failed_assertions": [x._asdict() for x in self.assertions_failed],
+            "checks_passed": int(self.checks_passed),
+            "state": self.state,
+            "extra": self.extra,
         }
 
     @property
@@ -171,7 +181,6 @@ class WatcherResult:
 
 
 class ValidationReporter:
-
     def __init__(self, watcher, trigger) -> None:
         """
         :type watcher: healthcheckbot.common.core.WatcherModule
@@ -191,7 +200,6 @@ class ValidationReporter:
 
 
 class WatcherModule(Module):
-
     def __init__(self, application):
         super().__init__(application)
         self.enable_assertions = True
@@ -222,19 +230,16 @@ class WatcherModule(Module):
 
 
 class OutputModule(Module):
-
     def output(self, watcher_instance: WatcherModule, watcher_result: WatcherResult):
         pass
 
 
 class TriggerModule(Module):
-
     def register_watcher(self, watcher: WatcherModule):
         pass
 
 
 class WatcherAssert(Module):
-
     def do_assert(self, state: object, reporter: ValidationReporter, assertion_name: str):
         """
         :param assertion_name:

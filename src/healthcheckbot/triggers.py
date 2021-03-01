@@ -1,31 +1,36 @@
 #    Healthcheck Bot
 #    Copyright (C) 2018 Dmitry Berezovsky
-#    
+#
 #    HealthcheckBot is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
-#    
+#
 #    HealthcheckBot is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
-#    
+#
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import NamedTuple, Callable, List
+from typing import List
 
 import datetime
 
 from healthcheckbot.common import validators
-from healthcheckbot.common.model import TriggerModule, WatcherModule, LoopModuleMixin, ParameterDef, WatcherResult, \
-    ValidationError
+from healthcheckbot.common.model import (
+    TriggerModule,
+    WatcherModule,
+    LoopModuleMixin,
+    ParameterDef,
+    WatcherResult,
+    ValidationError,
+)
 from healthcheckbot.common.utils import time_limit
 
 
 class SimpleTimerJob:
-
     def __init__(self, next_run: datetime.datetime = None, watcher: WatcherModule = None) -> None:
         self.next_run = next_run
         self.postpone_interval = None  # type: datetime.timedelta
@@ -34,7 +39,6 @@ class SimpleTimerJob:
 
 
 class SimpleTimer(TriggerModule, LoopModuleMixin):
-
     def __init__(self, application):
         super().__init__(application)
         self.interval = 300
@@ -47,11 +51,13 @@ class SimpleTimer(TriggerModule, LoopModuleMixin):
         pass
 
     def register_watcher(self, watcher: WatcherModule):
-        self.__jobs.append(SimpleTimerJob(
-            next_run=datetime.datetime.now() + datetime.timedelta(
-                seconds=0 if self.start_immediately else self.interval),
-            watcher=watcher
-        ))
+        self.__jobs.append(
+            SimpleTimerJob(
+                next_run=datetime.datetime.now()
+                + datetime.timedelta(seconds=0 if self.start_immediately else self.interval),
+                watcher=watcher,
+            )
+        )
 
     def step(self):
         current_time = datetime.datetime.now()
@@ -74,11 +80,12 @@ class SimpleTimer(TriggerModule, LoopModuleMixin):
                         job.postpone_interval = self.__max_postpone_duration
                     job.next_run = datetime.datetime.now() + job.postpone_interval
                     self.logger.error(
-                        "The next cycle will be postponed for {} seconds".format(job.postpone_interval.total_seconds()))
-                    watcher_result = WatcherResult({}, [ValidationError('execution_cycle', str(e), True)])
+                        "The next cycle will be postponed for {} seconds".format(job.postpone_interval.total_seconds())
+                    )
+                    watcher_result = WatcherResult({}, [ValidationError("execution_cycle", str(e), True)])
                     self.get_application_manager().deliver_watcher_result(job.watcher, watcher_result)
 
     PARAMS = (
-        ParameterDef('interval', validators=(validators.integer,)),
-        ParameterDef('start_immediately', validators=(validators.boolean,)),
+        ParameterDef("interval", validators=(validators.integer,)),
+        ParameterDef("start_immediately", validators=(validators.boolean,)),
     )
