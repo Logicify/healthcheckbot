@@ -81,12 +81,12 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Merge development -> master
+    - name: Merge master -> stable
       uses: devmasx/merge-branch@v1.3.1
       with:
         type: now
         from_branch: '${{ github.ref }}'
-        target_branch: master
+        target_branch: stable
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Create Release
