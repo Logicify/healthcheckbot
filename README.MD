@@ -1,4 +1,6 @@
-# Healthcheck Bot
+![Healthcheck Bot picture](https://github.com/Logicify/healthcheckbot/blob/master/development/cover-picture.png?raw=true "HealthcheckBot picture")
+
+<h2 align="center">Healthcheck Bot</h2>
 
 [![Build Status](https://travis-ci.org/Logicify/healthcheckbot.svg?branch=master)](https://travis-ci.org/Logicify/healthcheckbot)
 ![License](https://img.shields.io/github/license/logicify/healthcheckbot.svg)
