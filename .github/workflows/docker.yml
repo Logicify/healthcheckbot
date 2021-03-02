@@ -71,3 +71,4 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: logicify/healthcheckbot
+          readme-filepath: README.MD
