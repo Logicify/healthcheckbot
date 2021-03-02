@@ -65,10 +65,10 @@ jobs:
             logicify/healthcheckbot:latest
             logicify/healthcheckbot:${{ env.VERSION }}
 
-      - name: Update repo description
-        uses: peter-evans/dockerhub-description@v2.4.1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: logicify/healthcheckbot
-          readme-filepath: README.MD
+#      - name: Update repo description
+#        uses: peter-evans/dockerhub-description@v2.4.1
+#        with:
+#          username: ${{ secrets.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_TOKEN }}
+#          repository: logicify/healthcheckbot
+#          readme-filepath: README.MD
