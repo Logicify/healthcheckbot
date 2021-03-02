@@ -1,3 +1,4 @@
+---
 name: Build docker images
 on:
   workflow_dispatch:
